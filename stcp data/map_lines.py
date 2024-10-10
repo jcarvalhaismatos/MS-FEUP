@@ -4,6 +4,7 @@ import numpy as np
 # Load the data
 shapes_data = pd.read_csv('stcp data/shapes.txt')
 stops_data = pd.read_csv('stcp data/stops.txt')
+routes_data = pd.read_csv('stcp data/routes.txt')
 
 # Function to calculate the Haversine distance
 def haversine(lat1, lon1, lat2, lon2):
@@ -45,7 +46,8 @@ for shape_id, group in routes:
             'stop_name': nearest_stop['stop_name'],
             'stop_lat': nearest_stop['stop_lat'],
             'stop_lon': nearest_stop['stop_lon'],
-            'distance': distances.min()
+            'distance': distances.min(),
+            'route_name': routes_data.loc[routes_data['route_id'] == shape_id, 'route_long_name'].values[0],
         })
     
     # Store the assigned stops in the bus_routes dictionary
@@ -55,3 +57,9 @@ for shape_id, group in routes:
 for route, stops in bus_routes.items():
     print(f"Route: {route}")
     print(stops)
+
+# Combine all stops into a single DataFrame and save to CSV
+all_stops = pd.concat(bus_routes.values(), keys=bus_routes.keys())
+all_stops.reset_index(level=0, inplace=True)
+all_stops.rename(columns={'level_0': 'route'}, inplace=True)
+all_stops.to_csv("all_routes_stops.csv", index=False)

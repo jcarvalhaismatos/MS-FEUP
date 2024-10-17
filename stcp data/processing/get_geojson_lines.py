@@ -36,7 +36,7 @@ missing_stops = {}
 
 # Iterate through CSV files in the data directory
 for filename in os.listdir(data_dir):
-    if filename.endswith('.csv'):
+    if filename.endswith('.csv') and not "route_stops" in filename:
         line_name = filename.split('_')[0]  # Extract line name from filename
         
         # Read the CSV file

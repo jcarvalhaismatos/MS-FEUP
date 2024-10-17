@@ -1,49 +1,52 @@
 import folium
 import json
-import os
 
 # Create a map centered on Porto
 m = folium.Map(location=[41.15, -8.61], zoom_start=13)
 
-# Load the stops GeoJSON file
-stops_geojson_path = os.path.join(os.path.dirname(__file__), "stcp_stops.geojson")
-with open(stops_geojson_path, "r") as f:
-    stops_data = json.load(f)
-
-# Add stops to the map
-for feature in stops_data["features"]:
-    lat, lon = feature["geometry"]["coordinates"][::-1]
-    folium.CircleMarker(
-        location=[lat, lon],
-        radius=3,
-        color="blue",
-        fill=True,
-        fillColor="blue",
-        fillOpacity=0.7,
-        popup=feature["properties"]["stop_name"],
-        tooltip=feature["properties"]["stop_name"],
-    ).add_to(m)
-
-# Load the lines GeoJSON file
-lines_geojson_path = os.path.join(os.path.dirname(__file__), "stcp_lines.geojson")
-with open(lines_geojson_path, "r") as f:
+# Load the lines JSON file
+lines_json_path = "stcp data/processing/stcp_lines.json"
+with open(lines_json_path, "r", encoding="utf-8") as f:
     lines_data = json.load(f)
 
-# Add lines to the map
-for feature in lines_data["features"]:
-    folium.GeoJson(
-        feature,
-        style_function=lambda x: {
-            "color": x["properties"]["color"],
-            "weight": 3,
-            "opacity": 0.7,
-        },
-        tooltip=folium.GeoJsonTooltip(fields=["line_name"], aliases=["Line: "]),
+# Dictionary to store unique routes
+unique_routes = {}
+
+# Process lines data
+for line in lines_data["lines"]:
+    line_name = line["line_name"]
+    if line_name not in unique_routes:
+        coordinates = [(stop["lat"], stop["lon"]) for stop in line["stops"]]
+        color = line["color"]  # Use the color provided in the JSON file
+        unique_routes[line_name] = {
+            "coordinates": coordinates,
+            "color": color
+        }
+
+# Add unique routes to the map
+for line_name, route_data in unique_routes.items():
+    folium.PolyLine(
+        locations=route_data["coordinates"],
+        color=route_data["color"],
+        weight=7,
+        opacity=0.8,
+        popup=f"Line: {line_name}",
     ).add_to(m)
 
 # Save the map as an HTML file
-output_path = os.path.join(os.path.dirname(__file__), "stcp_lines_and_stops_map.html")
+output_path = "stcp data/results/stcp_lines_map.html"
 m.save(output_path)
 
 print(f"Map has been saved to {output_path}")
 print("Open this file in your web browser to view the map.")
+
+# Print information about unique lines
+print("\nUnique lines detected:")
+for line_name, route_data in unique_routes.items():
+    print(f"Line: {line_name}")
+    print(f"  Color: {route_data['color']}")
+    print(f"  Number of stops: {len(route_data['coordinates'])}")
+    print()
+
+# Print total number of unique lines
+print(f"Total number of unique lines: {len(unique_routes)}")

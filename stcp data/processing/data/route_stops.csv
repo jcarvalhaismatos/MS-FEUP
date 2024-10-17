@@ -1,4 +1,4 @@
-lcode,dir,code,name,zone,address,sequence
+lcode,dir,stop_code,name,zone,address,sequence
 702,0,"BLRB3","BOLHÃO","PRT1","R.BOLHÃO",1
 702,0,"GCRT","GONÇALO CRISTÓVÃO","PRT1","R.SÁ BANDEIRA",2
 702,0,"FTNH1","FONTINHA","PRT1","R.STA.CATARINA",3

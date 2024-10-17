@@ -1948,7 +1948,6 @@ TBNJ2,TBNJ2,TRAVESSA DE BONJÓIA,41.1526695827903,-8.57980028569838,PRT3,http://
 PINC2,PINC2,PINHEIRO DE CAMPANHÃ,41.1516350447375,-8.58186607499824,PRT1,http://www.stcp.pt/pt/viajar/paragens/?t=detalhe&paragem=PINC2
 ESAS1,ESAS1,ESC.SEC.ABEL SALAZAR,41.1974355001809,-8.60535315518682,MAI1,http://www.stcp.pt/pt/viajar/paragens/?t=detalhe&paragem=ESAS1
 ESAS2,ESAS2,ESC.SEC.ABEL SALAZAR,41.1973627781169,-8.605520599459,MAI1,http://www.stcp.pt/pt/viajar/paragens/?t=detalhe&paragem=ESAS2
-.,.,.,41.2541162233344,-8.65372581745763,MAI2,http://www.stcp.pt/pt/viajar/paragens/?t=detalhe&paragem=.
 RBR2,RBR2,RIBEIRA,41.1412184432508,-8.61426370642136,PRT1,http://www.stcp.pt/pt/viajar/paragens/?t=detalhe&paragem=RBR2
 GRJ,GRJ,GUERRA JUNQUEIRO,41.1558382701885,-8.63731484377377,PRT1,http://www.stcp.pt/pt/viajar/paragens/?t=detalhe&paragem=GRJ
 SETB,SETB,SETE BICAS,41.1827500271602,-8.65313889660664,PRT2,http://www.stcp.pt/pt/viajar/paragens/?t=detalhe&paragem=SETB

@@ -70,6 +70,10 @@ with open(file_paths['metro'], 'r', encoding='utf-8') as f:
 with open(file_paths['bus'], 'r', encoding='utf-8') as f:
     bus_data = json.load(f)
 
+# Create feature groups for stops
+porto_stops = folium.FeatureGroup(name='Porto Stops')
+outside_stops = folium.FeatureGroup(name='Outside Stops', show=False)
+
 # Add metro lines and stops
 for line in metro_data['lines']:
     # Draw line
@@ -84,14 +88,20 @@ for line in metro_data['lines']:
     
     # Add stops
     for stop in line['stops']:
-        folium.CircleMarker(
+        marker = folium.CircleMarker(
             location=[stop['lat'], stop['lon']],
             radius=5,
             color='#000000',
             fillColor='#ffffff',
             weight=2,
             popup=f"Metro: {stop['name']}",
-        ).add_to(m)
+        )
+        # Check if stop is in Porto
+        point = Point(stop['lon'], stop['lat'])
+        if porto_boundary.contains(point):
+            marker.add_to(porto_stops)
+        else:
+            marker.add_to(outside_stops)
 
 # Add bus lines and stops
 for line in bus_data['lines']:
@@ -107,14 +117,27 @@ for line in bus_data['lines']:
     
     # Add stops
     for stop in line['stops']:
-        folium.CircleMarker(
+        marker = folium.CircleMarker(
             location=[stop['lat'], stop['lon']],
             radius=3,
             color='#000000',
             fillColor='#ff0000',
             weight=1,
             popup=f"Bus: {stop['name']}",
-        ).add_to(m)
+        )
+        # Check if stop is in Porto
+        point = Point(stop['lon'], stop['lat'])
+        if porto_boundary.contains(point):
+            marker.add_to(porto_stops)
+        else:
+            marker.add_to(outside_stops)
+
+# Add feature groups to map
+porto_stops.add_to(m)
+outside_stops.add_to(m)
+
+# Add layer control
+folium.LayerControl().add_to(m)
 
 # Add a legend
 legend_html = '''

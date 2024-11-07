@@ -64,19 +64,23 @@ def create_stop_heatmap():
     # Project stops to same CRS as Porto boundary for accurate containment check
     stops_gdf = stops_gdf.to_crs(epsg=3763)
     
-    # Filter stops that are within Porto
+    # Create two separate GeoDataFrames for stops inside and outside Porto
     stops_gdf['is_in_porto'] = stops_gdf.geometry.apply(lambda x: porto_boundary.contains(x))
-    stops_gdf = stops_gdf[stops_gdf['is_in_porto']]
+    porto_stops = stops_gdf[stops_gdf['is_in_porto']].copy()
+    outside_stops = stops_gdf[~stops_gdf['is_in_porto']].copy()
     
     # Project back to WGS84 for the map
-    stops_gdf = stops_gdf.to_crs(epsg=4326)
+    porto_stops = porto_stops.to_crs(epsg=4326)
+    outside_stops = outside_stops.to_crs(epsg=4326)
     
-    # Create heatmap data
-    heat_data = [[row["lat"], row["lon"]] for _, row in stops_gdf.iterrows()]
-
-    # Add heatmap layer
+    # Create feature groups for the heatmaps
+    porto_heatmap = folium.FeatureGroup(name='Porto Stops Heatmap')
+    outside_heatmap = folium.FeatureGroup(name='Outside Stops Heatmap', show=False)
+    
+    # Add Porto heatmap
+    heat_data_porto = [[row["lat"], row["lon"]] for _, row in porto_stops.iterrows()]
     plugins.HeatMap(
-        heat_data,
+        heat_data_porto,
         radius=45,
         blur=45,
         max_zoom=13,
@@ -89,7 +93,32 @@ def create_stop_heatmap():
             0.8: '#B22222',
             1.0: '#800000',
         },
-    ).add_to(m)
+    ).add_to(porto_heatmap)
+    
+    # Add outside Porto heatmap with different colors
+    heat_data_outside = [[row["lat"], row["lon"]] for _, row in outside_stops.iterrows()]
+    plugins.HeatMap(
+        heat_data_outside,
+        radius=45,
+        blur=45,
+        max_zoom=13,
+        min_opacity=0.2,
+        gradient={
+            0.0: '#FFFFFF',
+            0.2: '#B0E0E6',  # Light blue
+            0.4: '#87CEEB',  # Sky blue
+            0.6: '#4682B4',  # Steel blue
+            0.8: '#0000CD',  # Medium blue
+            1.0: '#000080',  # Navy
+        },
+    ).add_to(outside_heatmap)
+    
+    # Add feature groups to map
+    porto_heatmap.add_to(m)
+    outside_heatmap.add_to(m)
+    
+    # Add layer control
+    folium.LayerControl().add_to(m)
 
     # Add a legend
     legend_html = """

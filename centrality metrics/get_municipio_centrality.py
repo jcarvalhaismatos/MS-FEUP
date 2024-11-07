@@ -10,9 +10,9 @@ def get_file_paths():
     """Get absolute paths to required files"""
     current_dir = os.path.dirname(os.path.abspath(__file__))
     return {
-        'metro': os.path.join(current_dir, 'metro_lines.json'),
-        'bus': os.path.join(current_dir, 'stcp_lines.json'),
-        'municipalities': os.path.join(current_dir, 'freguesias_municipios.geojson')
+        'metro': os.path.join(current_dir, 'data/metro_lines.json'),
+        'bus': os.path.join(current_dir, 'data/stcp_lines.json'),
+        'municipalities': os.path.join(current_dir, 'data/freguesias_municipios.geojson')
     }
 
 def load_transport_data(metro_file, bus_file):
@@ -126,29 +126,39 @@ def normalize_and_combine_metrics(df):
 def main():
     file_paths = get_file_paths()
     
+    # Load all municipalities and freguesias
     municipalities_gdf = gpd.read_file(file_paths['municipalities'])
-    municipalities_gdf = municipalities_gdf[municipalities_gdf['admin_level'] == '7']
     
-    print(municipalities_gdf)
+    # First get Porto municipality to use as boundary
+    porto_municipality = municipalities_gdf[
+        (municipalities_gdf['admin_level'] == '7') & 
+        (municipalities_gdf['name'] == 'Porto')
+    ]
+    
+    freguesias_gdf = municipalities_gdf[municipalities_gdf['admin_level'] == '8'].copy()
+    
+    porto_boundary = porto_municipality.iloc[0].geometry
+    freguesias_gdf['centroid'] = freguesias_gdf.geometry.centroid
+    freguesias_gdf['is_in_porto'] = freguesias_gdf['centroid'].apply(lambda x: porto_boundary.contains(x))
+    freguesias_gdf = freguesias_gdf[freguesias_gdf['is_in_porto']]
     
     stops_gdf = load_transport_data(file_paths['metro'], file_paths['bus'])
- 
-    centrality_df = calculate_municipality_centrality(municipalities_gdf, stops_gdf)
- 
-    final_df = normalize_and_combine_metrics(centrality_df)
     
+    centrality_df = calculate_municipality_centrality(freguesias_gdf, stops_gdf)
+    
+    final_df = normalize_and_combine_metrics(centrality_df)
     final_df = final_df.sort_values('centrality_score', ascending=False)
     
-    # Save results
-    output_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'municipality_centrality.csv')
-    final_df.to_csv(output_path, index=False)
-    
-    # Print top 5 most central municipalities
-    print("\nMunicipality Metrics:")
-    print("Municipality | Centrality Score | Stop Density | Coverage % | Transport Diversity")
-    print("-" * 85)
+    # Print metrics for all Porto freguesias with better alignment
+    print("\nPorto Freguesias Metrics:")
+    print(f"{'Freguesia':<70} | {'Centrality Score':>15} | {'Stop Density':>11} | {'Coverage %':>9} | {'Transport Diversity':>17}")
+    print("-" * 150)
     for _, row in final_df.iterrows():
-        print(f"{row['municipality'][:30]:<30} | {row['centrality_score']:15.3f} | {row['stop_density']:10.2f} | {row['coverage_percent']:9.2f} | {row['transport_diversity']:10.2f}")
+        print(f"{row['municipality']:<70} | {row['centrality_score']:15.3f} | "
+              f"{row['stop_density']:11.2f} | {row['coverage_percent']:9.2f} | "
+              f"{row['transport_diversity']:17.2f}")
+    
+    return final_df 
 
 if __name__ == "__main__":
     main()

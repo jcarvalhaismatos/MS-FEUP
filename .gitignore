@@ -163,3 +163,4 @@ cython_debug/
 /openstreetmap data/cache
 openstreetmap data/porto_municipality_pois.geojson
 /.idea/
+/cache

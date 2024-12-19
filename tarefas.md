@@ -1,7 +1,7 @@
 ## Análise da centralidade sem fator temporal
-- paragens por setor/freguesia
-- linhas por setor
-- matriz setor * setor ou freguesia*freguesia com número de mudanças de linha
+- paragens por setor/freguesia - FEITO (transport_network_map.html)
+- linhas por setor - FEITO (transport_statistics.txt)
+- matriz setor * setor ou freguesia*freguesia com número de mudanças de linha - 
 - ...
 
 ## Análises de distância e tempo
@@ -11,3 +11,6 @@
 ## Análise socioeconómica/comportamental
 - correlação entre paragens e densidade populacional
 - 
+
+
+Put final visualizations in "Final Visualization Images" folder

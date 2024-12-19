@@ -226,6 +226,55 @@ legend_html += """
 """
 m.get_root().html.add_child(folium.Element(legend_html))
 
+# Create a dictionary to store statistics per freguesia
+freguesia_stats = {
+    row["name"]: {
+        "metro_stops": 0,
+        "bus_stops": 0,
+        "metro_lines": set(),
+        "bus_lines": set(),
+    }
+    for _, row in freguesias_gdf.iterrows()
+}
+
+# Analyze metro stops and lines
+for line in metro_data["lines"]:
+    for stop in line["stops"]:
+        point = Point(stop["lon"], stop["lat"])
+        for _, freguesia in freguesias_gdf.iterrows():
+            if freguesia.geometry.contains(point):
+                freguesia_stats[freguesia["name"]]["metro_stops"] += 1
+                freguesia_stats[freguesia["name"]]["metro_lines"].add(line["line_name"])
+
+# Analyze bus stops and lines
+for line in bus_data["lines"]:
+    for stop in line["stops"]:
+        point = Point(stop["lon"], stop["lat"])
+        for _, freguesia in freguesias_gdf.iterrows():
+            if freguesia.geometry.contains(point):
+                freguesia_stats[freguesia["name"]]["bus_stops"] += 1
+                freguesia_stats[freguesia["name"]]["bus_lines"].add(line["line_name"])
+
+# Output statistics to a file
+output_stats_path = "centrality metrics/visualizations/transport_statistics.txt"
+with open(output_stats_path, "w", encoding="utf-8") as f:
+    f.write("Transportation Statistics per Freguesia\n")
+    f.write("=====================================\n\n")
+
+    for freguesia, stats in freguesia_stats.items():
+        f.write(f"{freguesia}:\n")
+        f.write(f"  Metro stops: {stats['metro_stops']}\n")
+        f.write(f"  Bus stops: {stats['bus_stops']}\n")
+        f.write(
+            f"  Metro lines: {', '.join(sorted(stats['metro_lines'])) if stats['metro_lines'] else 'None'}\n"
+        )
+        f.write(
+            f"  Bus lines: {', '.join(sorted(stats['bus_lines'])) if stats['bus_lines'] else 'None'}\n"
+        )
+        f.write("\n")
+
+print(f"Statistics have been saved to {output_stats_path}")
+
 # Save the map
 output_path = "centrality metrics/visualizations/transport_network_map.html"
 m.save(output_path)

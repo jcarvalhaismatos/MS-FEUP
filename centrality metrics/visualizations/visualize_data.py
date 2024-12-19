@@ -263,12 +263,13 @@ for idx, row in freguesias_gdf.iterrows():
     bus_count = stats["bus_stops"]
     metro_count = stats["metro_stops"]
 
-    label = f"B: <span style='color: red; font-weight: bold'>{bus_count}</span>, M: <span style='color: red; font-weight: bold'>{metro_count}</span>"
+    label = f"""B: <span style='color: red; font-weight: bold'>{bus_count}</span><br>
+                M: <span style='color: red; font-weight: bold'>{metro_count}</span>"""
     folium.Marker(
         location=row["centroid_coords"],
         icon=folium.DivIcon(
             icon_size=(150, 36),
-            icon_anchor=(75, 0),
+            icon_anchor=(75, 30),
             html=f'<div style="font-size: 14pt; color: #000000; text-align: center;">{label}</div>',
         ),
     ).add_to(freguesia_counts)

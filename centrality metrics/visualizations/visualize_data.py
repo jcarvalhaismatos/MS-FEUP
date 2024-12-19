@@ -185,8 +185,6 @@ outside_bus_stops.add_to(m)
 metro_lines.add_to(m)
 bus_lines.add_to(m)
 
-# Add layer control
-folium.LayerControl().add_to(m)
 
 # Add a legend
 legend_html = """
@@ -226,6 +224,7 @@ legend_html += """
 """
 m.get_root().html.add_child(folium.Element(legend_html))
 
+
 # Create a dictionary to store statistics per freguesia
 freguesia_stats = {
     row["name"]: {
@@ -254,6 +253,31 @@ for line in bus_data["lines"]:
             if freguesia.geometry.contains(point):
                 freguesia_stats[freguesia["name"]]["bus_stops"] += 1
                 freguesia_stats[freguesia["name"]]["bus_lines"].add(line["line_name"])
+
+
+# Create a feature group for the stop counts, initially hidden
+freguesia_counts = folium.FeatureGroup(name="Stop Counts", show=False)
+
+for idx, row in freguesias_gdf.iterrows():
+    stats = freguesia_stats.get(row["name"], {"bus_stops": 0, "metro_stops": 0})
+    bus_count = stats["bus_stops"]
+    metro_count = stats["metro_stops"]
+
+    label = f"B: <span style='color: red; font-weight: bold'>{bus_count}</span>, M: <span style='color: red; font-weight: bold'>{metro_count}</span>"
+    folium.Marker(
+        location=row["centroid_coords"],
+        icon=folium.DivIcon(
+            icon_size=(150, 36),
+            icon_anchor=(75, 0),
+            html=f'<div style="font-size: 14pt; color: #000000; text-align: center;">{label}</div>',
+        ),
+    ).add_to(freguesia_counts)
+
+freguesia_counts.add_to(m)
+
+
+# Add layer control
+folium.LayerControl().add_to(m)
 
 # Output statistics to a file
 output_stats_path = "centrality metrics/visualizations/transport_statistics.txt"

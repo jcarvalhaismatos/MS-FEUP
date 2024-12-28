@@ -1,0 +1,45 @@
+Transportation Statistics per Freguesia
+=====================================
+
+Bonfim:
+  Metro stops: 12
+  Bus stops: 186
+  Metro lines: A, B, Bexp, C, E, F
+  Bus lines: 203, 205, 206, 207, 300, 301, 302, 303, 305, 400, 401, 402, 403, 404, 5M, 603, 700, 701, 702, 703, 7M, 800, 801, 805, 806, 8M, 9M
+
+Cedofeita, Santo Ildefonso, Sé, Miragaia, São Nicolau e Vitória:
+  Metro stops: 35
+  Bus stops: 636
+  Metro lines: A, B, Bexp, C, D, E, F
+  Bus lines: 1, 10M, 11M, 12M, 13M, 18, 1M, 200, 201, 202, 203, 204, 206, 207, 208, 209, 2M, 300, 301, 302, 303, 304, 305, 3M, 400, 401, 402, 403, 4M, 500, 501, 502, 504, 507, 508, 5M, 600, 601, 602, 603, 700, 701, 702, 703, 704, 7M, 800, 801, 803, 805, 806, 8M, 900, 901, 902, 903, 904, 905, 906, 9M
+
+Paranhos:
+  Metro stops: 5
+  Bus stops: 449
+  Metro lines: D
+  Bus lines: 11M, 203, 204, 205, 206, 2M, 300, 301, 303, 304, 305, 3M, 402, 404, 4M, 505, 506, 508, 5M, 600, 602, 603, 604, 701, 702, 703, 704, 705, 706, 707, 803, 804, 805, 806, 8M
+
+Lordelo do Ouro e Massarelos:
+  Metro stops: 0
+  Bus stops: 372
+  Metro lines: None
+  Bus lines: 1, 12M, 13M, 18, 1M, 200, 201, 202, 203, 204, 207, 208, 209, 2M, 301, 302, 303, 402, 403, 500, 501, 502, 503, 504, 507, 601, 602, 803, 900, 902, 903, 907
+
+Ramalde:
+  Metro stops: 18
+  Bus stops: 259
+  Metro lines: A, B, Bexp, C, E, F
+  Bus lines: 13M, 201, 202, 203, 204, 205, 206, 208, 209, 2M, 301, 304, 3M, 501, 502, 503, 504, 507, 508, 601, 602, 704, 803
+
+Aldoar, Foz do Douro e Nevogilde:
+  Metro stops: 0
+  Bus stops: 248
+  Metro lines: None
+  Bus lines: 1, 13M, 18, 1M, 200, 201, 202, 203, 204, 205, 207, 208, 2M, 500, 501, 502, 504
+
+Campanhã:
+  Metro stops: 14
+  Bus stops: 318
+  Metro lines: A, B, Bexp, C, E, F
+  Bus lines: 107, 205, 206, 207, 301, 305, 400, 401, 402, 403, 404, 700, 7M, 800, 801, 804, 805, 806, 8M, 9M
+

@@ -6,7 +6,7 @@
 
 ## Análises de distância e tempo
 - em X minutos, quão longe se consegue ir?
-- 
+- quanto tempo para satisfazer as necessidades hbituais por setor
 
 ## Análise socioeconómica/comportamental
 - correlação entre paragens e densidade populacional

@@ -118,7 +118,7 @@ bus_edges = G_bus.edges(data=True)
 # edge example
 # ('5768', '5775', {'u': '5768', 'v': '5775', 'key': 0, 'mode': 'bus',  'tags': None, 'osm_type': None, 'length': 672.6245058849787, 'travel_time_seconds': 60.0, 'tag': None, 'geometry': <LINESTRING (-8.604 41.161, -8.598 41.165)>})
 
-bus_velocity = 7.5
+bus_velocity = 4.75
 
 nearest_bus_nodes = ox.nearest_nodes(G_bus, x_values, y_values)
 

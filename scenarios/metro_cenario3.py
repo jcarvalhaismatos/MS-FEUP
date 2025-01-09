@@ -24,7 +24,7 @@ porto_nodes.crs = "EPSG:4326"
 porto_edges.crs = "EPSG:4326"
 osm_fp = "../openstreetmap data/porto.osm.pbf"
 osm = OSM(osm_fp)
-scenario = 'foz_m'
+scenario = 'foz2_m'
 
 # G = osm.to_graph(porto_nodes, porto_edges2, graph_type='networkx', node_id_col='osmid', network_type='all')
 G = osm.to_graph(porto_nodes, porto_edges, graph_type='networkx', node_id_col='osmid', network_type='driving')
@@ -44,59 +44,38 @@ nodes = list(G.nodes(data=True))
 # print(geometry)
 
 new_nodes_coords = [
-    # francos
+    # [ # trindade
+    #     -8.610526799195668,
+    #     41.15064938367473
+    # ],
     [
-        -8.641944619168527,
-        41.15968115886852
+        -8.626072564053771,
+        41.15254993731568
     ],
     [
-        -8.643899973611553,
-        41.154519081291255
+        -8.634412995283611,
+        41.15294592151821
     ],
     [
-        -8.649695194396088,
-        41.153403524564396
+        -8.647277000065401,
+        41.15464985619218
     ],
     [
-        -8.652930752681073,
-        41.151968621549486
+        -8.655672208229305,
+        41.15526653943448
     ],
     [
-        -8.657909399133331,
-        41.150872663066764
+        -8.664642371037758,
+        41.15713908990193
     ],
     [
-        -8.662360241627283,
-        41.15082211038478
+        -8.671895081061137,
+        41.16107847856583
     ],
     [
-        -8.667091809347511,
-        41.150944807188864
-    ],
-    [
-        -8.670324843209556,
-        41.15276725053698
-    ],
-    [
-        -8.67302676500077,
-        41.15473980817322
-    ],
-    [
-        -8.676255475449778,
-        41.15644136657204
-    ],
-    [
-        -8.678172560330694,
-        41.15858869329139
-    ],
-    [
-        -8.68101446226251,
-        41.161391792230944
-    ],
-    [
-        -8.681462894901415,
-        41.16616487365823
-    ],
+        -8.678077335285252,
+        41.1660460498326
+    ]
 ]
 
 metro_nodes = [node for node, data in G.nodes(data=True) if data.get('tags') == 'metro']
@@ -107,7 +86,7 @@ G_metro = G.subgraph(metro_nodes).copy()
 #             41.165480773996194
 #           ],
 
-# node = ox.distance.nearest_nodes(G, -8.636418929431528, 41.165480773996194) # 5711
+# node = ox.distance.nearest_nodes(G_metro,   -8.610526799195668,  41.15064938367473) # 5726
 # print(node)
 # exit()
 # CASA DA MÙSICA -> '5706'
@@ -115,7 +94,7 @@ G_metro = G.subgraph(metro_nodes).copy()
 
 new_nodes = []
 for i, coord in enumerate(new_nodes_coords):
-    node_id = str(6100 + i)
+    node_id = str(6200 + i)
     G.add_node(node_id, id=node_id, osmid=node_id, x=coord[0], y=coord[1], tags='metro', visible=True,
                timestamp=pd.Timestamp('2024-11-16 14:13:07.127000'), geometry=Point(coord))
     new_nodes.append(node_id)
@@ -128,9 +107,15 @@ metro_edges = G_metro.edges(data=True)
 metro_velocity = 7.5
 # refactor
 new_line = [
-    '5711', *new_nodes
+    '5726', *new_nodes
 ]
 
+new_line_coords = [(G.nodes[node]['x'], G.nodes[node]['y']) for node in new_line]
+print(new_line_coords)
+
+# print 5711 node
+# print(G.nodes['5711'])
+# exit()
 for i in range(len(new_line) - 1):
 
     tag_name = scenario

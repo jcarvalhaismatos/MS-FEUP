@@ -25,6 +25,11 @@ porto_edges.crs = "EPSG:4326"
 osm_fp = "../openstreetmap data/porto.osm.pbf"
 osm = OSM(osm_fp)
 
+# # haversine distance between (-8.64379 41.16756, -8.64384 41.16742)
+# dist = haversine_distance(osmium.geom.Coordinates(-8.64379, 41.16756), osmium.geom.Coordinates(-8.64384, 41.16742))
+# print(dist)
+# exit()
+
 # G = osm.to_graph(porto_nodes, porto_edges2, graph_type='networkx', node_id_col='osmid', network_type='all')
 G = osm.to_graph(porto_nodes, porto_edges, graph_type='networkx', node_id_col='osmid', network_type='driving')
 # %%
@@ -40,21 +45,55 @@ nodes = list(G.nodes(data=True))
 
 # add a new node id 6001
 # create a point geometry
-geometry = Point((-8.60224, 41.18326))
-G.add_node('6001', id='6001', osmid='6001', x=-8.60224, y=41.18326, tags='metro', visible=True,
-           timestamp=pd.Timestamp('2024-11-16 14:13:07.127000'), geometry=geometry)
-print(G.nodes['6001'])
-print(geometry)
+# geometry = Point((-8.60224, 41.18326))
+# G.add_node('6001', id='6001', osmid='6001', x=-8.60224, y=41.18326, tags='metro', visible=True,
+#            timestamp=pd.Timestamp('2024-11-16 14:13:07.127000'), geometry=geometry)
+# print(G.nodes['6001'])
+# print(geometry)
 
 new_nodes_coords = [
-    (-8.61861, 41.14833),  # hospital santo antonio
-    (-8.62611, 41.15167),  # galiza
-    # extra
-    (-8.629698944570512, 41.166952008000976),  # constituição poente
-    (-8.614506912766828, 41.164367441539284),  # constituição
-    (-8.604035568811744, 41.16863192153469),  # covelo
-    (-8.59133262688328, 41.162493567104626),  # praça sá carneiro
-    (-8.590817642754343, 41.15661313050915)  # av 25 abril
+    # (-8.61861, 41.14833),  # hospital santo antonio
+    # (-8.62611, 41.15167),  # galiza
+    # # extra
+    # (-8.629698944570512, 41.166952008000976),  # constituição poente
+    # (-8.614506912766828, 41.164367441539284),  # constituição
+    # (-8.604035568811744, 41.16863192153469),  # covelo
+    # (-8.59133262688328, 41.162493567104626),  # praça sá carneiro
+    # (-8.590817642754343, 41.15661313050915)  # av 25 abril
+
+    # [
+    #     -8.610815, 41.14494
+    # ],
+    [
+        -8.61861, 41.14833
+    ],
+    [
+        -8.62611, 41.15167
+    ],
+    # [
+    #     -8.628282, 41.16058
+    # ],
+    [
+        -8.626640767818222, 41.166315871400485
+    ],
+    [
+        -8.6152379950028, 41.167648734379085
+    ],
+    [
+        -8.603494433529155, 41.16726631154831
+    ],
+    [
+        -8.590808018079054, 41.16254016956207
+    ],
+    [
+        -8.589825552501038, 41.15561435371256
+    ],
+    [
+        -8.597203956446881, 41.14831167286859
+    ],
+    # [
+    #     -8.610815, 41.14494
+    # ]
 
 ]
 
@@ -68,8 +107,7 @@ G_metro = G.subgraph(metro_nodes).copy()
 new_nodes = []
 for i, coord in enumerate(new_nodes_coords):
     node_id = str(6002 + i)
-    G.add_node(node_id, id=node_id, osmid=node_id, x=coord[0], y=coord[1], tags='metro', visible=True,
-               timestamp=pd.Timestamp('2024-11-16 14:13:07.127000'), geometry=Point(coord))
+    G.add_node(node_id, id=node_id, osmid=node_id, x=coord[0], y=coord[1], tags='metro', visible=True, timestamp=pd.Timestamp('2024-11-16 14:13:07.127000'), geometry=Point(coord))
     new_nodes.append(node_id)
 
 metro_edges = G_metro.edges(data=True)
@@ -84,6 +122,10 @@ new_line = [
     '5778', *new_nodes[:2], '5706', *new_nodes[2:], '5778'
 ]
 
+# coordinates of the new line
+new_line_coords = [(G.nodes[node]['x'], G.nodes[node]['y']) for node in new_line]
+print(new_line_coords)
+exit()
 for i in range(len(new_line) - 1):
     if i < 3:
         tag_name = 'rosa_base'
